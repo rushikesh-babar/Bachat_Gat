@@ -1,22 +1,38 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api'; // consistent base URL
+const API = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
-// Helper to get auth headers
-const getAuthHeaders = () => {
+// 👉 Add interceptor to attach token only for secured APIs
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  };
-};
 
-// Function to login the user (no auth header needed here)
+  // Define exact public endpoints
+  const publicUrls = ['/login'];
+
+  // Normalize URL for comparison (ensure it starts with `/api/...`)
+  const requestUrl = config.url.startsWith('/') ? config.url : `/${config.url}`;
+
+  const isPublic = publicUrls.includes(requestUrl);
+
+  if (token && !isPublic) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+
+// ✅ Login (public API)
 export const loginUser = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await API.post('/login', { email, password });
     if (response.data && response.data.token) {
       return {
         token: response.data.token,
@@ -30,31 +46,40 @@ export const loginUser = async (email, password) => {
     throw new Error(error.response?.data?.message || 'Login failed. Please check your credentials and try again.');
   }
 };
+// ✅ Validate JWT Token (secured)
+export const validateToken = async () => {
+  try {
+    const response = await API.get('/validate-token');
+    return response.status === 200;
+  } catch (error) {
+    return false;
+  }
+};
 
-// ✅ Add new member (Admin only, secured)
+// ✅ Add new member (secured)
 export const addMember = async (formData) => {
   try {
-    const response = await axios.post(`${API_URL}/add`, formData, getAuthHeaders());
+    const response = await API.post('/add', formData);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to add member. Please try again.');
   }
 };
 
-// ✅ Fetch all members (Admin or Member, secured)
+// ✅ Fetch all members (secured)
 export const fetchMembers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/list`, getAuthHeaders());
-    return response.data;
+    const response = await API.get('/list');
+    return response.data || [];
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to fetch members.');
   }
 };
 
-// ✅ Update member (Admin only, secured)
+// ✅ Update member (secured)
 export const updateMember = async (id, memberData) => {
   try {
-    const response = await axios.put(`${API_URL}/member/update/${id}`, memberData, getAuthHeaders());
+    const response = await API.put(`/member/update/${id}`, memberData);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to update member. Please try again.');
@@ -64,7 +89,7 @@ export const updateMember = async (id, memberData) => {
 // ✅ Fetch member by ID (secured)
 export const fetchMemberById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/member/id/${id}`, getAuthHeaders());
+    const response = await API.get(`/member/id/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to fetch member by ID.');

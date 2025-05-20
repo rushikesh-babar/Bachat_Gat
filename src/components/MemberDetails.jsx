@@ -14,6 +14,7 @@ const MemberDetails = () => {
       try {
         const data = await fetchMemberById(id);
         setMember(data);
+      // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setError('Failed to fetch member details.');
       }

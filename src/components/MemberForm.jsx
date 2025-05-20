@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { addMember } from '../services/memberService'; // Adjust path if needed
 
 const MemberForm = () => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const MemberForm = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.firstName) newErrors.firstName = 'First name is required';
+    if (!formData.middleName) newErrors.middleName = 'Middle name is required';
     if (!formData.lastName) newErrors.lastName = 'Last name is required';
     if (!formData.dob) newErrors.dob = 'Date of birth is required';
     if (!formData.contactNo) newErrors.contactNo = 'Contact number is required';
@@ -45,11 +46,14 @@ const MemberForm = () => {
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
+    if (!formData.panCardNo) newErrors.panCardNo = 'PAN number is required';
+    if (!formData.aadharNo) newErrors.aadharNo = 'Aadhar number is required';
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
+    if (!formData.role) newErrors.role = 'Role is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -60,22 +64,16 @@ const MemberForm = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/add', formData);
-      const message = typeof response.data === 'string' ? response.data : response.data?.message;
-
-      if (response.status === 200 && message) {
-        setErrors({});
-        alert(message);
-        navigate('/members');
-      } else {
-        throw new Error(message || 'Unknown error occurred');
-      }
+      const message = await addMember(formData);
+      setErrors({});
+      alert(message);
+      navigate('/view-members');
     } catch (error) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        general: error.response?.data?.message || error.message || 'Failed to add member',
+        general: error.message,
       }));
-      alert(error.response?.data?.message || error.message || 'An error occurred');
+      alert(error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -106,7 +104,7 @@ const MemberForm = () => {
                 {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
               </div>
               <div className="col-md-4">
-                <label className="form-label">Middle Name</label>
+                <label className="form-label">Middle Name*</label>
                 <input
                   type="text"
                   name="middleName"
@@ -114,6 +112,7 @@ const MemberForm = () => {
                   onChange={handleChange}
                   className="form-control"
                 />
+                {errors.middleName && <div className="text-danger">{errors.middleName}</div>}
               </div>
               <div className="col-md-4">
                 <label className="form-label">Last Name*</label>
@@ -216,7 +215,7 @@ const MemberForm = () => {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">PAN Card No</label>
+                <label className="form-label">PAN Card No*</label>
                 <input
                   type="text"
                   name="panCardNo"
@@ -224,12 +223,13 @@ const MemberForm = () => {
                   onChange={handleChange}
                   className="form-control"
                 />
+                {errors.panCardNo && <div className="text-danger">{errors.panCardNo}</div>}
               </div>
             </div>
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label">Aadhar No</label>
+                <label className="form-label">Aadhar No*</label>
                 <input
                   type="text"
                   name="aadharNo"
@@ -237,6 +237,7 @@ const MemberForm = () => {
                   onChange={handleChange}
                   className="form-control"
                 />
+                {errors.aadharNo && <div className="text-danger">{errors.aadharNo}</div>}
               </div>
               <div className="col-md-6">
                 <label className="form-label">Nominee Name</label>
@@ -262,14 +263,18 @@ const MemberForm = () => {
                 />
               </div>
               <div className="col-md-6">
-                <label className="form-label">Role</label>
-                <input
-                  type="text"
+                <label className="form-label">Role*</label>
+                <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="form-control"
-                />
+                  className="form-select"
+                >
+                  <option value="">Select Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Member">Member</option>
+                </select>
+                {errors.role && <div className="text-danger">{errors.role}</div>}
               </div>
             </div>
 
