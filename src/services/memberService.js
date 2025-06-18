@@ -46,25 +46,18 @@ export const loginUser = async (email, password) => {
     throw new Error(error.response?.data?.message || 'Login failed. Please check your credentials and try again.');
   }
 };
-// ✅ Validate JWT Token (secured)
-export const validateToken = async () => {
-  try {
-    const response = await API.get('/validate-token');
-    return response.status === 200;
-  } catch (error) {
-    return false;
-  }
-};
 
 // ✅ Add new member (secured)
 export const addMember = async (formData) => {
   try {
     const response = await API.post('/add', formData);
-    return response.data;
+    return response.data; // plain string message from backend
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to add member. Please try again.');
+    const errMsg = error.response?.data || 'Failed to add member. Please try again.';
+    throw new Error(errMsg);
   }
 };
+
 
 // ✅ Fetch all members (secured)
 export const fetchMembers = async () => {

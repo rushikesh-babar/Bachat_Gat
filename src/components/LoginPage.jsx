@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { loginUser } from '../services/memberService';
 
 const LoginPage = () => {
@@ -13,7 +12,7 @@ const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
- const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
@@ -23,15 +22,13 @@ const LoginPage = () => {
       const decoded = jwtDecode(token);
 
       localStorage.setItem('token', token);
-      localStorage.setItem('role', decoded.role); // Save the role to localStorage
+      localStorage.setItem('role', decoded.role); 
 
       if (decoded.role === 'Admin') {
-		    console.log('Navigating to /dashboards/admin');
-
+        console.log('Navigating to /dashboards/admin');
         navigate('/dashboards/admin');
       } else if (decoded.role === 'Member') {
-		    console.log('Navigating to /dashboards/regular');
-
+        console.log('Navigating to /dashboards/regular');
         navigate('/dashboards/regular');
       } else {
         setError('Invalid role detected.');
@@ -44,14 +41,29 @@ const LoginPage = () => {
   };
   return (
     <div
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex flex-column justify-content-center align-items-center" 
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%)',
+        background: 'linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%)', 
         fontFamily: 'Poppins, sans-serif',
         padding: '20px',
       }}
     >
+      <h2
+        className="text-center" 
+        style={{
+          color: '#ffffff', 
+          fontWeight: '700', 
+          fontSize: '2.5rem', 
+          marginBottom: '40px', 
+          lineHeight: '1.2', 
+          textShadow: '2px 2px 4px rgba(0,0,0,0.3)', 
+          padding: '0 20px',
+        }}
+      >
+        Welcome to Self Help Group
+      </h2>
+
       <div className="card shadow-lg" style={{ width: '100%', maxWidth: '500px', borderRadius: '15px' }}>
         <div className="card-header bg-primary text-white text-center" style={{ borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }}>
           <h3 className="mb-0">Member Login</h3>

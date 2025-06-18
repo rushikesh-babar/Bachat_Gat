@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchMembers } from '../services/memberService';
-
+import BackButton from './BackButton';
+import LogoutButton from './LogoutButton';
 const UpdateMemberList = () => {
   const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);  // State to handle loading
-  const [error, setError] = useState(null);  // State to handle errors
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMembersData = async () => {
       try {
-        const data = await fetchMembers();  // Fetch members once when the component mounts
-        console.log(data); // Log to verify the data structure
+        const data = await fetchMembers();
+        console.log(data);
         setMembers(data);
-        setLoading(false);  // Set loading to false when data is fetched
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching members:', error);
         setError(error.message || 'An error occurred while fetching members');
@@ -22,22 +23,22 @@ const UpdateMemberList = () => {
       }
     };
 
-    fetchMembersData();  // Calling fetchMembersData on component mount
-  }, []);  // Empty dependency array to run only on mount
+    fetchMembersData();
+  }, []);
 
   if (loading) {
-    return <div>Loading members...</div>;  // Loading state
+    return <div>Loading members...</div>;
   }
 
   if (error) {
-    return <div className="text-danger">{error}</div>;  // Error state
+    return <div className="text-danger">{error}</div>;
   }
 
-  return (
+return (
     <div className="container mt-5">
       <h2 className="text-center text-primary mb-4">Select Member to Update</h2>
       <div className="table-responsive">
-        <table className="table table-bordered table-hover">
+        <table className="table table-bordered table-hover shadow-lg">
           <thead className="table-dark">
             <tr>
               <th>Member ID</th>
@@ -51,8 +52,8 @@ const UpdateMemberList = () => {
             {members.length > 0 ? (
               members.map((member) => (
                 <tr
-                  key={member.memberId}  
-                  onClick={() => navigate(`/update-member/${member.memberId}`)}  
+                  key={member.memberId}
+                  onClick={() => navigate(`/update-member/${member.memberId}`)}
                   style={{ cursor: 'pointer' }}
                   className="table-row-hover"
                 >
@@ -63,7 +64,10 @@ const UpdateMemberList = () => {
                   <td>
                     <button
                       className="btn btn-sm btn-primary"
-                      onClick={() => navigate(`/update-member/${member.memberId}`)}  
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/update-member/${member.memberId}`);
+                      }}
                     >
                       Edit
                     </button>
@@ -72,12 +76,23 @@ const UpdateMemberList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center text-muted">No members found.</td>  
+                <td colSpan="5" className="text-center text-muted">No members found.</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+      <BackButton />
+      <LogoutButton />
+
+      {/* Inline styles for hover effect */}
+      <style>{`
+        .table-row-hover:hover {
+          background-color: #f0f8ff;
+          text-decoration: underline;
+          transition: background-color 0.3s ease;
+        }
+      `}</style>
     </div>
   );
 };

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { fetchMembers } from '../services/memberService';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import BackButton from './BackButton';
+import LogoutButton from './LogoutButton';
 
 const ViewMembers = () => {
   const [members, setMembers] = useState([]);
@@ -35,9 +38,6 @@ const ViewMembers = () => {
               <th>Member ID</th>
               <th>Name</th>
               <th>Contact No</th>
-              <th>Email</th>
-              <th>Gender</th>
-              <th>Education</th>
               <th>Role</th>
             </tr>
           </thead>
@@ -48,20 +48,17 @@ const ViewMembers = () => {
                   key={member.memberId}
                   onClick={() => handleRowClick(member.memberId)}
                   style={{ cursor: 'pointer' }}
-                  className="table-row-hover"
+                  className="clickable-row"
                 >
                   <td>{member.memberId}</td>
                   <td>{member.firstName} {member.middleName} {member.lastName}</td>
                   <td>{member.contactNo}</td>
-                  <td>{member.email}</td>
-                  <td>{member.gender}</td>
-                  <td>{member.education}</td>
                   <td>{member.role}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center">
+                <td colSpan="4" className="text-center">
                   No members found.
                 </td>
               </tr>
@@ -69,6 +66,23 @@ const ViewMembers = () => {
           </tbody>
         </table>
       </div>
+
+      <BackButton />
+      <LogoutButton />
+
+
+      {/* Inline CSS or you can move to a CSS file */}
+      <style>
+        {`
+          .clickable-row:hover {
+            text-decoration: underline;
+            background-color: #f0f8ff; /* subtle highlight */
+          }
+          .clickable-row {
+            transition: background-color 0.3s ease;
+          }
+        `}
+      </style>
     </div>
   );
 };

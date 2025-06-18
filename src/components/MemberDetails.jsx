@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchMemberById } from '../services/memberService';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import BackButton from './BackButton';
+import LogoutButton from './LogoutButton';
 
 const MemberDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [member, setMember] = useState(null);
   const [error, setError] = useState('');
 
@@ -27,7 +28,10 @@ const MemberDetails = () => {
   if (!member) return <div className="text-center mt-4">Loading member details...</div>;
 
   return (
-    <div className="container d-flex flex-column min-vh-100 py-5">
+    <div className="container d-flex flex-column min-vh-100 py-5 position-relative">
+      {/* ✅ Logout button with built-in absolute styling */}
+      <LogoutButton />
+
       {/* Heading */}
       <div className="text-center mb-4">
         <h2 className="text-primary fw-bold">
@@ -49,8 +53,6 @@ const MemberDetails = () => {
             <TableRow label="Contact No" value={member.contactNo} />
             <TableRow label="Email" value={member.email} />
             <TableRow label="Address" value={member.address} />
-            <TableRow label="PAN Card No" value={member.panCardNo} />
-            <TableRow label="Aadhar No" value={member.aadharNo} />
             <TableRow label="Nominee Name" value={member.nomineeName} />
             <TableRow label="Nominee Relation" value={member.nomineeRelation} />
           </tbody>
@@ -58,14 +60,24 @@ const MemberDetails = () => {
       </div>
 
       {/* Back Button */}
-      <div className="text-center mt-5">
-        <button
-          className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold shadow-sm"
-          onClick={() => navigate(-1)}
-        >
-          <i className="bi bi-arrow-left-circle me-2"></i>Back
-        </button>
+      <div className="mt-4 mx-auto">
+        <BackButton />
       </div>
+
+      {/* Table Styling */}
+      <style>{`
+        th {
+          width: auto !important;
+          white-space: nowrap;
+          background-color: #fff !important;
+          color: #6c757d !important;
+          font-weight: 700 !important;
+        }
+        td {
+          background-color: #fff !important;
+          color: #212529 !important;
+        }
+      `}</style>
     </div>
   );
 };
@@ -73,8 +85,8 @@ const MemberDetails = () => {
 // Table Row Component
 const TableRow = ({ label, value }) => (
   <tr>
-    <th className="bg-white text-secondary fw-bold w-25">{label}</th>
-    <td className="bg-white text-dark">{value || 'N/A'}</td>
+    <th>{label}</th>
+    <td>{value || 'N/A'}</td>
   </tr>
 );
 
