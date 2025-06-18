@@ -3,190 +3,194 @@ package com.example.bachat_gat.model;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Member {
-	    private int memberId;
-	    private String firstName;
-	    private String middleName;
-	    private String lastName;
-	    private Date dob;
-	    private String gender;
-	    private String maritalStatus;
-	    private String education;
-	    private String contactNo;
-	    private String email;
-	    private String address;
-	    private String panCardNo;
-	    private String aadharNo;
-	    private String nomineeName;
-	    private String nomineeRelation;
-	    private String role;
-	    private String password;
-	    private Timestamp createdAt;
-	    private Timestamp updatedAt;
+    private int memberId;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date dob;
+    private String gender;
+    private String maritalStatus;
+    private String education;
+    private String contactNo;
+    private String email;
+    private String address;
+    private String panCardNo;
+    private String aadharNo;
+    private String nomineeName;
+    private String nomineeRelation;
+    private String role;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
-	    // --- Getters and Setters ---
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
-	    public int getMemberId() {
-	        return memberId;
-	    }
+    // --- Getters and Setters ---
 
-	    public void setMemberId(int newMemberId) {
-	        this.memberId = newMemberId;
-	    }
+    public int getMemberId() {
+        return memberId;
+    }
 
-	    public String getFirstName() {
-	        return firstName;
-	    }
+    public void setMemberId(int newMemberId) {
+        this.memberId = newMemberId;
+    }
 
-	    public void setFirstName(String firstName) {
-	        this.firstName = firstName;
-	    }
+    public String getFirstName() {
+        return firstName;
+    }
 
-	    public String getMiddleName() {
-	        return middleName;
-	    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	    public void setMiddleName(String middleName) {
-	        this.middleName = middleName;
-	    }
+    public String getMiddleName() {
+        return middleName;
+    }
 
-	    public String getLastName() {
-	        return lastName;
-	    }
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
 
-	    public void setLastName(String lastName) {
-	        this.lastName = lastName;
-	    }
+    public String getLastName() {
+        return lastName;
+    }
 
-	    public Date getDob() {
-	        return dob;
-	    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	    public void setDob(Date dob) {
-	        this.dob = dob;
-	    }
+    public Date getDob() {
+        return dob;
+    }
 
-	    public String getGender() {
-	        return gender;
-	    }
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
 
-	    public void setGender(String gender) {
-	        this.gender = gender;
-	    }
+    public String getGender() {
+        return gender;
+    }
 
-	    public String getMaritalStatus() {
-	        return maritalStatus;
-	    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	    public void setMaritalStatus(String maritalStatus) {
-	        this.maritalStatus = maritalStatus;
-	    }
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
 
-	    public String getEducation() {
-	        return education;
-	    }
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
 
-	    public void setEducation(String education) {
-	        this.education = education;
-	    }
+    public String getEducation() {
+        return education;
+    }
 
-	    public String getContactNo() {
-	        return contactNo;
-	    }
+    public void setEducation(String education) {
+        this.education = education;
+    }
 
-	    public void setContactNo(String contactNo) {
-	        this.contactNo = contactNo;
-	    }
+    public String getContactNo() {
+        return contactNo;
+    }
 
-	    public String getEmail() {
-	        return email;
-	    }
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
 
-	    public void setEmail(String email) {
-	        this.email = email;
-	    }
+    public String getEmail() {
+        return email;
+    }
 
-	    public String getAddress() {
-	        return address;
-	    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	    public void setAddress(String address) {
-	        this.address = address;
-	    }
+    public String getAddress() {
+        return address;
+    }
 
-	    public String getPanCardNo() {
-	        return panCardNo;
-	    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	    public void setPanCardNo(String panCardNo) {
-	        this.panCardNo = panCardNo;
-	    }
+    public String getPanCardNo() {
+        return panCardNo;
+    }
 
-	    public String getAadharNo() {
-	        return aadharNo;
-	    }
+    public void setPanCardNo(String panCardNo) {
+        this.panCardNo = panCardNo;
+    }
 
-	    public void setAadharNo(String aadharNo) {
-	        this.aadharNo = aadharNo;
-	    }
+    public String getAadharNo() {
+        return aadharNo;
+    }
 
-	    public String getNomineeName() {
-	        return nomineeName;
-	    }
+    public void setAadharNo(String aadharNo) {
+        this.aadharNo = aadharNo;
+    }
 
-	    public void setNomineeName(String nomineeName) {
-	        this.nomineeName = nomineeName;
-	    }
+    public String getNomineeName() {
+        return nomineeName;
+    }
 
-	    public String getNomineeRelation() {
-	        return nomineeRelation;
-	    }
+    public void setNomineeName(String nomineeName) {
+        this.nomineeName = nomineeName;
+    }
 
-	    public void setNomineeRelation(String nomineeRelation) {
-	        this.nomineeRelation = nomineeRelation;
-	    }
+    public String getNomineeRelation() {
+        return nomineeRelation;
+    }
 
-	    public String getRole() {
-	        return role;
-	    }
+    public void setNomineeRelation(String nomineeRelation) {
+        this.nomineeRelation = nomineeRelation;
+    }
 
-	    public void setRole(String role) {
-	        this.role = role;
-	    }
+    public String getRole() {
+        return role;
+    }
 
-	    public String getPassword() {
-	        return password;
-	    }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-	    public void setPassword(String password) {
-	        this.password = password;
-	    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	    public Timestamp getCreatedAt() {
-	        return createdAt;
-	    }
 
-	    public void setCreatedAt(Timestamp createdAt) {
-	        this.createdAt = createdAt;
-	    }
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
 
-	    public Timestamp getUpdatedAt() {
-	        return updatedAt;
-	    }
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	    public void setUpdatedAt(Timestamp updatedAt) {
-	        this.updatedAt = updatedAt;
-	    }
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
 
-		@Override
-		public String toString() {
-			return "Member [memberId=" + memberId + ", firstName=" + firstName + ", middleName=" + middleName
-					+ ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", maritalStatus="
-					+ maritalStatus + ", education=" + education + ", contactNo=" + contactNo + ", email=" + email
-					+ ", address=" + address + ", panCardNo=" + panCardNo + ", aadharNo=" + aadharNo + ", nomineeName="
-					+ nomineeName + ", nomineeRelation=" + nomineeRelation + ", role=" + role + ", password=" + password
-					+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
-		}
-	    
-	}
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
+    @Override
+    public String toString() {
+        return "Member [memberId=" + memberId + ", firstName=" + firstName + ", middleName=" + middleName
+                + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender + ", maritalStatus="
+                + maritalStatus + ", education=" + education + ", contactNo=" + contactNo + ", email=" + email
+                + ", address=" + address + ", panCardNo=" + panCardNo + ", aadharNo=" + aadharNo + ", nomineeName="
+                + nomineeName + ", nomineeRelation=" + nomineeRelation + ", role=" + role + ", password=PROTECTED"
+                + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+    }
+}

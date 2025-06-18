@@ -9,14 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.bachat_gat.model.LoginRequest;
 import com.example.bachat_gat.model.Member;
 import com.example.bachat_gat.service.JWTService;
 import com.example.bachat_gat.service.MemberService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
-
 public class MemberController {
 
     @Autowired
@@ -79,12 +78,12 @@ public class MemberController {
 
     // ✅ Member Login Endpoint
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) {
-        System.out.println("Login attempt for member email: " + member.getEmail());
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("Login attempt for member email: " + loginRequest.getEmail());
 
-        Member foundMember = memberService.getMemberByEmail(member.getEmail());
+        Member foundMember = memberService.getMemberByEmail(loginRequest.getEmail());
 
-        if (foundMember == null || !passwordEncoder.matches(member.getPassword(), foundMember.getPassword())) {
+        if (foundMember == null || !passwordEncoder.matches(loginRequest.getPassword(), foundMember.getPassword())) {
             System.out.println("❌ Invalid member credentials");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
@@ -99,4 +98,6 @@ public class MemberController {
             "role", foundMember.getRole()
         ));
     }
+   
 }
+

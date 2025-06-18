@@ -18,7 +18,6 @@ public class MemberDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // ✅ Reusable RowMapper for Member
     private final RowMapper<Member> memberRowMapper = (ResultSet rs, int rowNum) -> {
         Member member = new Member();
         member.setMemberId(rs.getInt("member_id"));
@@ -42,10 +41,35 @@ public class MemberDao {
             member.setCreatedAt(rs.getTimestamp("created_at"));
             member.setUpdatedAt(rs.getTimestamp("updated_at"));
         } catch (SQLException e) {
-            // These columns may not exist in all queries (optional)
         }
         return member;
     };
+
+    // --- Duplicate Check Methods ---
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
+    }
+
+    public boolean existsByContactNo(String contactNo) {
+        String sql = "SELECT COUNT(*) FROM members WHERE contact_no = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, contactNo);
+        return count != null && count > 0;
+    }
+
+    public boolean existsByPanCardNo(String panCardNo) {
+        String sql = "SELECT COUNT(*) FROM members WHERE pan_card_no = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, panCardNo);
+        return count != null && count > 0;
+    }
+
+    public boolean existsByAadharNo(String aadharNo) {
+        String sql = "SELECT COUNT(*) FROM members WHERE aadhar_no = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, aadharNo);
+        return count != null && count > 0;
+    }
+    // --- End duplicate check ---
 
     public int addMember(Member member) {
         String sql = "INSERT INTO members (member_id, first_name, middle_name, last_name, dob, gender, marital_status, education, contact_no, email, address, pan_card_no, aadhar_no, nominee_name, nominee_relation, role, password) " +
