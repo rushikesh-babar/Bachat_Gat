@@ -1,0 +1,71 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import BackButton from './BackButton';
+
+const SelectEmiMonth = () => {
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
+  const navigate = useNavigate();
+
+  const handleGo = () => {
+    if (month && year) {
+      navigate(`/monthly-emi-collection/${month}/${year}`);
+    } else {
+      alert('Please select both month and year');
+    }
+  };
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
+
+  return (
+    <div className="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light">
+      <div
+        className="card shadow-lg rounded-4 p-4 mb-3"
+        // Changed background gradient to match the blue theme
+        style={{ width: '100%', maxWidth: '500px', background: 'linear-gradient(135deg, #f0f4ff, #ffffff)' }}
+      >
+        <div className="text-center mb-4">
+          {/* Changed text color to text-primary */}
+          <h3 className="fw-bold text-primary">Select EMI Month & Year</h3>
+          <p className="text-muted">Choose the EMI collection month and year to proceed</p>
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label fw-semibold">Month:</label>
+          <select className="form-select" value={month} onChange={e => setMonth(e.target.value)}>
+            <option value="">Select Month</option>
+            {[
+              'January', 'February', 'March', 'April', 'May', 'June',
+              'July', 'August', 'September', 'October', 'November', 'December'
+            ].map(m => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label fw-semibold">Year:</label>
+          <select className="form-select" value={year} onChange={e => setYear(e.target.value)}>
+            <option value="">Select Year</option>
+            {yearOptions.map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Changed button class to btn-primary */}
+        <button className="btn btn-primary btn-sm px-4 rounded-pill mx-auto d-block" onClick={handleGo}>
+          <i className="bi bi-arrow-right-circle me-2"></i> Go
+        </button>
+      </div>
+
+      <div className="mb-3">
+        <BackButton />
+      </div>
+    </div>
+  );
+};
+
+export default SelectEmiMonth;

@@ -44,3 +44,48 @@ export const fetchLoanTypes = async () => {
     throw new Error(errMsg);
   }
 };
+
+
+export const getActiveLoans = async () => {
+  try {
+    const response = await loanAPI.get('/loans/active-loans');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching active loans:', error);
+    throw error;
+  }
+};
+
+export const getLoanDetails = async (loanId) => {
+  try {
+    const response = await loanAPI.get(`/loans/active-loans/${loanId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching loan details for ${loanId}:`, error);
+    throw error;
+  }
+};
+
+export const closeLoan = async (loanId) => {
+  try {
+    const response = await loanAPI.post(`/loans/${loanId}/close`); 
+    return response.data; 
+  } catch (error) {
+    const errMsg = error.response?.data?.message || 'Failed to close loan. Please try again.';
+    console.error(`Error closing loan ${loanId}:`, error);
+    throw new Error(errMsg);
+  }
+};
+
+// 🔍 Get loan closure summary (loan details + paid EMIs + closing amount)
+export const getLoanClosureSummary = async (loanId) => {
+  try {
+    const response = await loanAPI.get(`/loans/${loanId}/closure-summary`);
+    return response.data;
+  } catch (error) {
+    const errMsg = error.response?.data?.message || 'Failed to fetch loan closure summary.';
+    console.error(`Error fetching closure summary for loanId ${loanId}:`, error);
+    throw new Error(errMsg);
+  }
+};
+

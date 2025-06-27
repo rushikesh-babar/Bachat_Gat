@@ -81,6 +81,13 @@ const DashboardRegular = () => {
           >
             <i className="bi bi-calendar3 me-2"></i> View Monthwise Collection
           </button>
+          
+          <button
+            className="btn btn-outline-danger btn-lg rounded-pill"
+            onClick={() => navigate('/loans/active')}
+           >
+             <i className="bi bi-list-columns-reverse me-2"></i> View Active Loans
+         </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 package com.example.bachat_gat.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.bachat_gat.model.ActiveLoanDetailResponseDTO;
+import com.example.bachat_gat.model.ActiveLoanMemberDTO;
 import com.example.bachat_gat.model.Loan;
+import com.example.bachat_gat.model.LoanClosureSummaryDTO;
 import com.example.bachat_gat.model.LoanType;
 import com.example.bachat_gat.service.LoanService;
 
@@ -39,7 +43,6 @@ public class LoanController {
     @GetMapping("/loan-types")
     public ResponseEntity<List<LoanType>> getAllLoanTypes() {
         List<LoanType> loanTypes = loanService.getAllLoanTypes();
-        // Returns HTTP 200 OK with the list of loan types (can be empty if none exist)
         return new ResponseEntity<>(loanTypes, HttpStatus.OK);
     }
     
@@ -47,11 +50,45 @@ public class LoanController {
     public ResponseEntity<LoanType> getLoanTypeById(@PathVariable Long id) {
         LoanType loanType = loanService.getLoanTypeById(id);
         if (loanType != null) {
-            // If the service returned a LoanType (meaning it was found)
             return new ResponseEntity<>(loanType, HttpStatus.OK);
         } else {
-            // If the service returned null (meaning no loan type was found for the ID)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 Not Found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
     }
+    
+    @GetMapping("/active-loans")
+    public ResponseEntity<List<ActiveLoanMemberDTO>> getActiveLoans() {
+        List<ActiveLoanMemberDTO> activeLoans = loanService.getActiveLoanMembers();
+        return ResponseEntity.ok(activeLoans);
+    }
+    
+    @GetMapping("/active-loans/{loanId}")
+    public ResponseEntity<ActiveLoanDetailResponseDTO> getLoanDetails(@PathVariable int loanId) {
+        ActiveLoanDetailResponseDTO response = loanService.getLoanDetailWithEmis(loanId);
+        return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/{loanId}/close")
+    public ResponseEntity<String> closeLoan(@PathVariable int loanId) {
+        try {
+            loanService.closeLoan(loanId, LocalDate.now()); 
+            return ResponseEntity.ok("Loan closed successfully.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Failed to close loan: " + ex.getMessage());
+        }
+    }
+    
+    @GetMapping("/{loanId}/closure-summary")
+    public ResponseEntity<?> getLoanClosureSummary(@PathVariable int loanId) {
+        try {
+            LoanClosureSummaryDTO summary = loanService.getLoanClosureSummary(loanId);
+            return ResponseEntity.ok(summary);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Failed to fetch closure summary: " + ex.getMessage());
+        }
+    }
+
+
 }

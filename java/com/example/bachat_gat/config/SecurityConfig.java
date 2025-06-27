@@ -41,7 +41,8 @@ public class SecurityConfig {
             	        "/dashboards/**", "/memberform", "/update-members", "/view-members", 
             	        "/member-details/**","/update-member/**","/select-month","/collection-summary",
             	        "/add-collection-list/**","/memberwise-collection","/monthwise-collection/**",
-            	        "/select-member-loan","/add-loan/**","add-loan-details/**"
+            	        "/select-member-loan","/add-loan/**","add-loan-details/**","/loans/*","/close-loan",
+            	        "/close-loan/*/details","/monthly-emi-collection/**", "/select-emi-month"            	        
             	    ).permitAll()
 
             	    .requestMatchers("/api/login").permitAll()
@@ -49,7 +50,11 @@ public class SecurityConfig {
             	    .requestMatchers("/api/add", "/api/member/update/**").hasAuthority("Admin")
             	    .requestMatchers("/savings/add","/savings/list").hasAnyAuthority("Admin")
             	    .requestMatchers("/savings/paid-unpaid").hasAnyAuthority("Admin","Member")
-            	    .requestMatchers("/api/loans/add","/api/loans/loan-types").hasAuthority("Admin")
+            	    .requestMatchers("/api/loans/active-loans","/api/loans/active-loans/{loanId}").hasAnyAuthority("Admin","Member")            	    
+            	    .requestMatchers("/api/loans/add","/api/loans/loan-types",
+            	    		         "/api/loans//{loanId}/close",
+            	    		         "/api/loans//{loanId}/closure-summary").hasAuthority("Admin")
+            	    .requestMatchers("/api/emis/paid","/api/emis/pending","/api/emis/pay","api/emis/calculate//{loanId}").hasAuthority("Admin")          	   
             	    .anyRequest().authenticated()
             	)
             .exceptionHandling(ex -> ex

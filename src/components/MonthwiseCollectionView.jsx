@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getPaidUnpaidMembers } from '../services/savingsService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BackButton from './BackButton';
-import 'animate.css'; // Assuming you have animate.css installed for animations
+import 'animate.css'; 
 
 const MonthwiseCollection = () => {
   const { month, year } = useParams();

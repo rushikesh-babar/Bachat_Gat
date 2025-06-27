@@ -12,6 +12,7 @@ public class Loan {
     private BigDecimal interestRate;
     private int durationMonths;
     private String loanStatus;
+    private LocalDate closeDate;
 
     // ====== Getters and Setters ======
 
@@ -78,4 +79,13 @@ public class Loan {
     public void setLoanStatus(String loanStatus) {
         this.loanStatus = loanStatus;
     }
+
+	public LocalDate getCloseDate() {
+		return closeDate;
+	}
+
+	public void setCloseDate(LocalDate closeDate) {
+		this.closeDate = closeDate;
+	}
+    
 }

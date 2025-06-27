@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchMembers } from '../services/memberService';
 import { addLoan, fetchLoanTypes } from '../services/loanService'; 
@@ -18,7 +18,7 @@ const AddLoanForm = () => {
   const [member, setMember] = useState(null);
   const [loanTypes, setLoanTypes] = useState([]); 
   const [loanData, setLoanData] = useState({
-    loanAmount: '',
+    loanAmount: '', 
     interestRate: '',
     duration: '',
     startDate: null,
@@ -72,11 +72,8 @@ const AddLoanForm = () => {
       setLoadingLoanTypes(true);
       try {
         const data = await fetchLoanTypes();
-        console.log("DEBUG: Data received from fetchLoanTypes API:", data); // DEBUG LOG 1
-
         if (Array.isArray(data)) {
           setLoanTypes(data);
-          console.log("DEBUG: loanTypes state set to:", data); // DEBUG LOG 2
         } else {
           console.error("API response for loan types was not an array. Actual data:", data);
           setError("Failed to load loan types: Invalid data format from API. Please ensure you are logged in as an admin.");
@@ -98,38 +95,38 @@ const AddLoanForm = () => {
   }, []); // Empty dependency array means this runs once on mount
 
   // --- Input Change Handlers ---
-  const handleChange = useCallback((e) => {
-    setLoanData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
-    // eslint-disable-next-line no-undef
-    if (error && e.target.name in prevData) { 
-        setError(null);
-    }
-  }, [error]); 
+  const handleChange = (e) => {
+  setLoanData((prevData) => ({
+    ...prevData,
+    [e.target.name]: e.target.value,
+  }));
 
-  const handleLoanTypeChange = useCallback((e) => { 
-    const selectedLoanTypeId = e.target.value;
-    const selectedLoanType = loanTypes.find(
-      (type) => type.loanTypeId?.toString() === selectedLoanTypeId
-    );
-
-    setLoanData((prevData) => ({
-      ...prevData,
-      loanTypeId: selectedLoanTypeId,
-      interestRate: selectedLoanType ? selectedLoanType.interestRate?.toString() : '',
-    }));
+  if (error) {
     setError(null);
-  }, [loanTypes]); 
+  }
+};
 
-  const handleDateChange = useCallback((date) => {
-    setLoanData((prevData) => ({
-      ...prevData,
-      startDate: date,
-    }));
-    setError(null);
-  }, []);
+const handleLoanTypeChange = (e) => {
+  const selectedLoanTypeId = e.target.value;
+  const selectedLoanType = loanTypes.find(
+    (type) => type.loanTypeId?.toString() === selectedLoanTypeId
+  );
+
+  setLoanData((prevData) => ({
+    ...prevData,
+    loanTypeId: selectedLoanTypeId,
+    interestRate: selectedLoanType ? selectedLoanType.interestRate?.toString() : '',
+  }));
+  setError(null);
+};
+
+const handleDateChange = (date) => {
+  setLoanData((prevData) => ({
+    ...prevData,
+    startDate: date,
+  }));
+  setError(null);
+};
 
   // --- EMI Calculation Utility ---
   const calculateEMI = (P, R, N) => {
@@ -294,8 +291,6 @@ const AddLoanForm = () => {
   }
 
   // --- Main Component Render ---
-  console.log("DEBUG: Rendering AddLoanForm. Current loanTypes state:", loanTypes); // DEBUG LOG 3
-
   return (
     <div className="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light py-5 position-relative">
       <div
@@ -338,10 +333,10 @@ const AddLoanForm = () => {
                 <i className="bi bi-plus-circle me-2"></i> Add Another Loan
               </button>
 
-              <button className="btn btn-outline-secondary btn-md rounded-pill px-3 ms-2" onClick={() => navigate('/dashboard')}>
+              <button className="btn btn-outline-secondary btn-md rounded-pill px-3 ms-2" onClick={() => navigate('/dashboards/admin')}>
                  <i className="bi bi-house-door me-2"></i> Go to Dashboard
               </button>
-               <button className="btn btn-outline-info btn-md rounded-pill px-3 ms-2" onClick={() => navigate('/loans')}>
+               <button className="btn btn-outline-info btn-md rounded-pill px-3 ms-2" onClick={() => navigate('/loans/active')}>
                  <i className="bi bi-list me-2"></i> View All Loans
               </button>
             </div>
@@ -372,7 +367,6 @@ const AddLoanForm = () => {
                             <option value="">
                                 {loadingLoanTypes ? 'Loading Loan Types...' : (loanTypes.length === 0 ? 'No Loan Types Available' : 'Select a Loan Type')}
                             </option>
-                            {/* THIS IS WHERE THE MAP FUNCTION IS */}
                             {loanTypes.map((type) => (
                                 <option key={type.loanTypeId} value={type.loanTypeId}>
                                     {type.typeName || `Loan Type ${type.loanTypeId}`} ({type.interestRate}%)

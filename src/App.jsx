@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify'; // ✅ Added for global toast support
+import { ToastContainer } from 'react-toastify';
 import LoginPage from './components/LoginPage';
 import MemberForm from './components/MemberForm';
 import ViewMembers from './components/ViewMembers';
@@ -19,15 +19,23 @@ import MonthwiseCollectionView from './components/MonthwiseCollectionView';
 import SelectMonthYearForView from './components/SelectMonthYearFormView';
 import AddLoanForm from './components/AddLoanForm';
 import SelectMemberForLoan from './components/SelectMemberForLoan';
+import ActiveLoansPage from './components/ActiveLoansPage';
+import LoanDetailsPage from './components/LoanDetailsPage';
+import MonthlyEmiCollection from './components/MonthlyEmiCollection';
+import SelectEmiMonth from './components/SelectEmiMonth';
+// NEW IMPORTS for Loan Closure
+import OpenLoansListForClosure from './components/OpenLoansListForClosure';
+import LoanClosureDetails from './components/LoanClosureDetails';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-import 'react-toastify/dist/ReactToastify.css'; // ✅ Toastify styles
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <Router>
       <>
-        <ToastContainer position="top-center" autoClose={3000} /> {/* ✅ ToastContainer added */}
+        <ToastContainer position="top-center" autoClose={3000} />
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginPage />} />
@@ -153,25 +161,78 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/select-member-loan"
             element={
               <ProtectedRoute role="Admin">
-               <SelectMemberForLoan />          
+                <SelectMemberForLoan />
               </ProtectedRoute>
             }
           />
-          
           <Route
-  path="/add-loan-details/:memberId"
-  element={
-    <ProtectedRoute role="Admin">
-      <AddLoanForm />
-    </ProtectedRoute>
-  }
-/>
+            path="/add-loan-details/:memberId"
+            element={
+              <ProtectedRoute role="Admin">
+                <AddLoanForm />
+              </ProtectedRoute>
+            }
+          />
 
-          
+          {/* Loan Management - Accessible to Admin and Member */}
+          <Route
+          path="/loans/active"
+          element={
+            <ProtectedRoute role={['Admin', 'Member']}>
+               <ActiveLoansPage />
+            </ProtectedRoute>
+          }
+        />
+       <Route
+       path="/loans/:loanId"
+       element={
+         <ProtectedRoute role={['Admin', 'Member']}>
+             <LoanDetailsPage />
+         </ProtectedRoute>
+        }
+      />
+
+          {/* NEW LOAN CLOSURE ROUTES (removed "admin" from paths) */}
+          <Route
+            path="/close-loan" 
+            element={
+              <ProtectedRoute role="Admin">
+                <OpenLoansListForClosure />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/close-loan/:loanId/details" 
+            element={
+              <ProtectedRoute role="Admin">
+                <LoanClosureDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* EMI Collection */}
+          <Route
+            path="/monthly-emi-collection/:month/:year"
+            element={
+              <ProtectedRoute role="Admin">
+                <MonthlyEmiCollection />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/select-emi-month"
+            element={
+              <ProtectedRoute role="Admin">
+                 <SelectEmiMonth />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
       </>
     </Router>
